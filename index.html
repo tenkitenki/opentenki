@@ -77,25 +77,62 @@
   @media (prefers-reduced-motion: reduce){
     .troi::before,.troi::after{animation:none}
   }
-  .hero-in{position:relative;z-index:1;padding:92px 24px 76px;max-width:1080px;margin:0 auto}
+  .hero-in{position:relative;z-index:1;padding:88px 24px 76px;max-width:1080px;margin:0 auto;
+    display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center}
   .nhan{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;
     color:var(--xanh);background:color-mix(in srgb,var(--xanh) 11%,transparent);
     border:1px solid color-mix(in srgb,var(--xanh) 24%,transparent);
     padding:5px 13px;border-radius:999px;margin-bottom:22px}
   .cham{width:6px;height:6px;border-radius:50%;background:var(--xanh)}
   h1{font-size:clamp(36px,6.2vw,62px);line-height:1.08;letter-spacing:-.035em;
-    font-weight:800;margin:0 0 20px;max-width:15ch}
+    font-weight:800;margin:0 0 20px;max-width:19ch}
   .grad{background:linear-gradient(120deg,var(--xanh),var(--xanh2) 45%,var(--tim));
     -webkit-background-clip:text;background-clip:text;color:transparent}
   .phu{font-size:clamp(17px,2.1vw,20px);color:var(--nhat);max-width:56ch;margin:0 0 14px}
   .phu-en{font-size:15px;color:var(--nhat);opacity:.8;max-width:60ch;margin:0}
 
-  .so{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:14px;margin-top:46px;max-width:760px}
+  .so{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;margin-top:40px;max-width:420px}
   .so-o{background:var(--the);border:1px solid var(--vien);border-radius:14px;
     padding:18px 20px;box-shadow:var(--bong)}
   .so-n{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
   .so-t{font-size:13px;color:var(--nhat);margin-top:3px}
+
+
+  /* ── Thẻ thời tiết dựng bằng CSS, không ảnh, không JS ────── */
+  .xem{position:relative}
+  .may{position:absolute;inset:-26px;border-radius:32px;
+    background:linear-gradient(150deg,color-mix(in srgb,var(--xanh2) 34%,transparent),
+                                      color-mix(in srgb,var(--tim) 26%,transparent));
+    filter:blur(34px);opacity:.75}
+  .kinh{position:relative;background:var(--the);border:1px solid var(--vien);
+    border-radius:22px;padding:24px;box-shadow:var(--bong2)}
+  .k-dau{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .k-noi{font-size:14.5px;font-weight:600}
+  .k-tinh{font-size:12.5px;color:var(--nhat);margin-top:1px}
+  .k-gio{font-size:12px;color:var(--nhat);text-align:right;line-height:1.45}
+  .k-do{display:flex;align-items:center;gap:16px;margin:18px 0 4px}
+  .k-so{font-size:56px;font-weight:800;letter-spacing:-.045em;line-height:1}
+  .k-so sup{font-size:24px;font-weight:600;vertical-align:super;margin-left:2px}
+  .k-bt{font-size:42px;line-height:1}
+  .k-mo{font-size:14.5px;color:var(--nhat);margin-bottom:18px}
+  .k-hang{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+    padding:14px 0;border-top:1px solid var(--vien);border-bottom:1px solid var(--vien)}
+  .k-o{text-align:center}
+  .k-o b{display:block;font-size:15px;font-weight:700}
+  .k-o span{font-size:11.5px;color:var(--nhat)}
+  .k-gio-luoi{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:16px}
+  .k-c{text-align:center}
+  .k-c i{display:block;font-style:normal;font-size:11px;color:var(--nhat);margin-bottom:6px}
+  .k-cot{height:44px;display:flex;align-items:flex-end;justify-content:center}
+  .k-cot span{width:70%;border-radius:5px;
+    background:linear-gradient(180deg,var(--xanh2),var(--xanh))}
+  .k-c b{display:block;font-size:11.5px;font-weight:600;margin-top:5px}
+  @media (max-width:900px){
+    .hero-in{grid-template-columns:1fr;gap:44px}
+    .xem{order:2;max-width:420px}
+    .so{max-width:none;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+  }
 
   /* ── Khối chung ───────────────────────────────────────────── */
   section{padding:76px 0}
@@ -178,6 +215,7 @@
 <div class="hero">
   <div class="troi" aria-hidden="true"></div>
   <div class="hero-in">
+    <div>
     <span class="nhan"><span class="cham"></span>Miễn phí · Không quảng cáo</span>
     <h1>Thời tiết Việt Nam, <span class="grad">chi tiết tới từng phường xã</span></h1>
     <p class="phu">Dự báo cho cả 3.321 phường xã trên 34 tỉnh thành. Radar mưa từ vệ tinh, đường đi của bão, và cộng đồng người cùng tỉnh chia sẻ tình hình thực tế ngoài trời.</p>
@@ -188,6 +226,38 @@
       <div class="so-o"><div class="so-n">3.321</div><div class="so-t">phường xã</div></div>
       <div class="so-o"><div class="so-n">30 phút</div><div class="so-t">nhịp radar</div></div>
       <div class="so-o"><div class="so-n">0 ₫</div><div class="so-t">trọn tính năng</div></div>
+    </div>
+    </div>
+
+    <div class="xem" aria-hidden="true">
+      <div class="may"></div>
+      <div class="kinh">
+        <div class="k-dau">
+          <div>
+            <div class="k-noi">Phường Hoàn Kiếm</div>
+            <div class="k-tinh">Hà Nội</div>
+          </div>
+          <div class="k-gio">Hôm nay<br>14:00</div>
+        </div>
+        <div class="k-do">
+          <div class="k-so">31<sup>°</sup></div>
+          <div class="k-bt">🌦️</div>
+        </div>
+        <div class="k-mo">Mưa rào rải rác · cảm giác như 36°</div>
+        <div class="k-hang">
+          <div class="k-o"><b>78%</b><span>khả năng mưa</span></div>
+          <div class="k-o"><b>12 km/h</b><span>gió đông nam</span></div>
+          <div class="k-o"><b>7</b><span>chỉ số UV</span></div>
+        </div>
+        <div class="k-gio-luoi">
+          <div class="k-c"><i>15h</i><div class="k-cot"><span style="height:62%"></span></div><b>31°</b></div>
+          <div class="k-c"><i>16h</i><div class="k-cot"><span style="height:78%"></span></div><b>32°</b></div>
+          <div class="k-c"><i>17h</i><div class="k-cot"><span style="height:100%"></span></div><b>33°</b></div>
+          <div class="k-c"><i>18h</i><div class="k-cot"><span style="height:70%"></span></div><b>31°</b></div>
+          <div class="k-c"><i>19h</i><div class="k-cot"><span style="height:48%"></span></div><b>29°</b></div>
+          <div class="k-c"><i>20h</i><div class="k-cot"><span style="height:34%"></span></div><b>28°</b></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
