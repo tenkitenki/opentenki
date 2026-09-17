@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mã uỷ quyền — OpenTenki</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<style>
+  .ma{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;
+    word-break:break-all;background:var(--nen2);border:1px solid var(--vien);
+    border-radius:12px;padding:16px 18px;margin:14px 0;line-height:1.55;
+    user-select:all;-webkit-user-select:all}
+  .trong{color:var(--nhat)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="./"><span class="logo-o"></span>OpenTenki</a>
+  </div>
+</nav>
+
+<div class="dau">
+  <div class="dau-in">
+  <h1>Mã uỷ quyền</h1>
+  <p class="ngay">Trang kỹ thuật — chỉ dùng khi lấy quyền truy cập Threads API</p>
+  </div>
+</div>
+
+<div class="bao">
+
+<div id="co" hidden>
+  <h2>Mã của bạn</h2>
+  <p>Bấm vào khối dưới để chọn hết, rồi sao chép:</p>
+  <div class="ma" id="ma"></div>
+  <div class="hop">
+    <p><strong>Dán vào <code>.env</code>:</strong></p>
+    <div class="ma">THREADS_OAUTH_CODE=<span id="ma2"></span></div>
+    <p>Rồi chạy: <code>npm run thu-threads -- --doi-ma</code></p>
+    <p><strong>Mã này hết hạn sau vài phút.</strong> Làm ngay, đừng để lát nữa.</p>
+  </div>
+</div>
+
+<div id="khong">
+  <h2 class="trong">Chưa có mã</h2>
+  <p class="trong">Trang này chỉ hiện nội dung khi Threads chuyển hướng về đây kèm tham số <code>code</code>. Mở thẳng thì không có gì để hiện.</p>
+</div>
+
+<div id="loi" hidden>
+  <h2>Threads từ chối</h2>
+  <div class="ma" id="loi-chu"></div>
+  <p>Thường là do bạn bấm Huỷ, hoặc địa chỉ chuyển hướng chưa khớp cấu hình trong bảng điều khiển của Meta.</p>
+</div>
+
+<a class="quay" href="./">← Về trang chủ OpenTenki</a>
+
+</div>
+
+<footer>
+  <div class="ft">
+    <div>© 2026 OpenTenki</div>
+    <div class="ft-lk"><a href="./">Trang chủ</a><a href="./privacy.html">Quyền riêng tư</a></div>
+  </div>
+</footer>
+
+<script>
+// Trang DUY NHẤT của site này có JavaScript. Ba trang tài liệu (chính sách,
+// điều khoản, xoá dữ liệu) vẫn hoàn toàn tĩnh để trình thu thập của Meta đọc
+// được — trang này thì chỉ mình chủ kho dùng, và nó bắt buộc phải đọc được
+// tham số trên URL nên không tránh được JavaScript.
+(function () {
+  var t = new URLSearchParams(location.search);
+  var ma = t.get('code');
+  var loi = t.get('error_description') || t.get('error');
+  if (ma) {
+    // Threads gắn thêm "#_" vào cuối, cắt đi kẻo dán nhầm cả nó.
+    ma = ma.replace(/#_$/, '');
+    document.getElementById('ma').textContent = ma;
+    document.getElementById('ma2').textContent = ma;
+    document.getElementById('co').hidden = false;
+    document.getElementById('khong').hidden = true;
+  } else if (loi) {
+    document.getElementById('loi-chu').textContent = loi;
+    document.getElementById('loi').hidden = false;
+    document.getElementById('khong').hidden = true;
+  }
+})();
+</script>
+
+</body>
+</html>
