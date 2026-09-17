@@ -3,49 +3,310 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OpenTenki — Ứng dụng thời tiết Việt Nam</title>
-<meta name="description" content="OpenTenki — ứng dụng thời tiết miễn phí cho 34 tỉnh thành Việt Nam. Dự báo theo phường xã, radar mưa, theo dõi bão, phòng trò chuyện theo tỉnh.">
+<title>OpenTenki — Thời tiết Việt Nam, chi tiết tới từng phường xã</title>
+<meta name="description" content="OpenTenki: ứng dụng thời tiết miễn phí cho 34 tỉnh thành Việt Nam. Dự báo tới 3.321 phường xã, radar mưa vệ tinh, theo dõi bão, phòng trò chuyện theo tỉnh.">
 <meta name="robots" content="index, follow">
-<link rel="stylesheet" href="./style.css">
+<meta property="og:title" content="OpenTenki — Thời tiết Việt Nam">
+<meta property="og:description" content="Dự báo tới từng phường xã, radar mưa vệ tinh, theo dõi bão, cộng đồng theo tỉnh.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nen:#ffffff;
+    --nen2:#f5f8fb;
+    --chu:#0f1720;
+    --nhat:#5a6775;
+    --vien:#e2e8ef;
+    --xanh:#0a6ed1;
+    --xanh2:#38bdf8;
+    --tim:#6366f1;
+    --vang:#f59e0b;
+    --the:#ffffff;
+    --bong:0 1px 2px rgba(15,23,32,.05), 0 8px 24px -8px rgba(15,23,32,.10);
+    --bong2:0 2px 4px rgba(15,23,32,.06), 0 20px 48px -16px rgba(15,23,32,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --nen:#0b1016; --nen2:#111823; --chu:#e9eef4; --nhat:#94a3b4;
+      --vien:#1f2a36; --xanh:#5aa9ff; --xanh2:#38bdf8; --tim:#818cf8;
+      --the:#131b25;
+      --bong:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -8px rgba(0,0,0,.5);
+      --bong2:0 2px 4px rgba(0,0,0,.5), 0 20px 48px -16px rgba(0,0,0,.7);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--nen);color:var(--chu);
+    font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .bao{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ── Thanh trên ───────────────────────────────────────────── */
+  nav{position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.6) blur(14px);
+    background:color-mix(in srgb, var(--nen) 82%, transparent);
+    border-bottom:1px solid var(--vien)}
+  .nav-in{max-width:1080px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;gap:10px}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;
+    letter-spacing:-.02em;font-size:17px;color:var(--chu);text-decoration:none}
+  .logo-o{width:26px;height:26px;border-radius:8px;flex:none;
+    background:linear-gradient(140deg,var(--xanh2),var(--xanh) 55%,var(--tim));
+    box-shadow:0 2px 8px -2px color-mix(in srgb,var(--xanh) 60%,transparent)}
+  .nav-lk{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+  .nav-lk a{color:var(--nhat);text-decoration:none;font-size:14px;font-weight:500;
+    padding:7px 11px;border-radius:8px}
+  .nav-lk a:hover{color:var(--chu);background:var(--nen2)}
+
+  /* ── Hero ─────────────────────────────────────────────────── */
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--vien)}
+  .troi{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .troi::before,.troi::after{content:"";position:absolute;border-radius:50%;
+    filter:blur(70px);opacity:.5}
+  .troi::before{width:620px;height:620px;top:-280px;left:-140px;
+    background:radial-gradient(circle,var(--xanh2),transparent 68%);
+    animation:troi1 26s ease-in-out infinite alternate}
+  .troi::after{width:560px;height:560px;top:-200px;right:-160px;
+    background:radial-gradient(circle,var(--tim),transparent 68%);
+    animation:troi2 32s ease-in-out infinite alternate}
+  @keyframes troi1{to{transform:translate(120px,70px) scale(1.15)}}
+  @keyframes troi2{to{transform:translate(-100px,90px) scale(1.1)}}
+  @media (prefers-reduced-motion: reduce){
+    .troi::before,.troi::after{animation:none}
+  }
+  .hero-in{position:relative;z-index:1;padding:92px 24px 76px;max-width:1080px;margin:0 auto}
+  .nhan{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;
+    color:var(--xanh);background:color-mix(in srgb,var(--xanh) 11%,transparent);
+    border:1px solid color-mix(in srgb,var(--xanh) 24%,transparent);
+    padding:5px 13px;border-radius:999px;margin-bottom:22px}
+  .cham{width:6px;height:6px;border-radius:50%;background:var(--xanh)}
+  h1{font-size:clamp(36px,6.2vw,62px);line-height:1.08;letter-spacing:-.035em;
+    font-weight:800;margin:0 0 20px;max-width:15ch}
+  .grad{background:linear-gradient(120deg,var(--xanh),var(--xanh2) 45%,var(--tim));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .phu{font-size:clamp(17px,2.1vw,20px);color:var(--nhat);max-width:56ch;margin:0 0 14px}
+  .phu-en{font-size:15px;color:var(--nhat);opacity:.8;max-width:60ch;margin:0}
+
+  .so{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:14px;margin-top:46px;max-width:760px}
+  .so-o{background:var(--the);border:1px solid var(--vien);border-radius:14px;
+    padding:18px 20px;box-shadow:var(--bong)}
+  .so-n{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
+  .so-t{font-size:13px;color:var(--nhat);margin-top:3px}
+
+  /* ── Khối chung ───────────────────────────────────────────── */
+  section{padding:76px 0}
+  .tieu{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--xanh);margin:0 0 12px}
+  h2{font-size:clamp(26px,3.6vw,36px);line-height:1.2;letter-spacing:-.028em;
+    font-weight:700;margin:0 0 14px;max-width:20ch}
+  .dan{color:var(--nhat);max-width:62ch;margin:0 0 40px;font-size:16.5px}
+
+  /* ── Tính năng ────────────────────────────────────────────── */
+  .luoi{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:18px}
+  .the{background:var(--the);border:1px solid var(--vien);border-radius:16px;
+    padding:26px;box-shadow:var(--bong);transition:transform .18s ease, box-shadow .18s ease}
+  .the:hover{transform:translateY(-3px);box-shadow:var(--bong2)}
+  .bt{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+    margin-bottom:16px;font-size:21px;
+    background:linear-gradient(140deg,color-mix(in srgb,var(--xanh2) 22%,transparent),
+                                      color-mix(in srgb,var(--tim) 20%,transparent))}
+  .the h3{font-size:17px;font-weight:700;margin:0 0 7px;letter-spacing:-.015em}
+  .the p{margin:0;color:var(--nhat);font-size:14.6px;line-height:1.6}
+
+  /* ── Nguồn ────────────────────────────────────────────────── */
+  .nguon{background:var(--nen2);border-top:1px solid var(--vien);
+    border-bottom:1px solid var(--vien)}
+  .ng-luoi{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .ng{background:var(--the);border:1px solid var(--vien);border-radius:13px;padding:18px 20px}
+  .ng b{display:block;font-size:15px;margin-bottom:3px}
+  .ng span{font-size:13.5px;color:var(--nhat)}
+
+  /* ── Cảnh báo ─────────────────────────────────────────────── */
+  .luu{border:1px solid color-mix(in srgb,var(--vang) 42%,var(--vien));
+    background:color-mix(in srgb,var(--vang) 9%,var(--the));
+    border-radius:16px;padding:26px 28px;display:flex;gap:18px;align-items:flex-start}
+  .luu-bt{font-size:24px;line-height:1;flex:none;margin-top:2px}
+  .luu h3{margin:0 0 8px;font-size:17px;font-weight:700}
+  .luu p{margin:0 0 9px}
+  .luu p:last-child{margin:0}
+  .en{color:var(--nhat);font-size:14px}
+
+  /* ── Tài liệu ─────────────────────────────────────────────── */
+  .tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+  .tl a{display:block;background:var(--the);border:1px solid var(--vien);
+    border-radius:15px;padding:24px;text-decoration:none;color:var(--chu);
+    box-shadow:var(--bong);transition:transform .18s ease,border-color .18s ease}
+  .tl a:hover{transform:translateY(-3px);border-color:var(--xanh)}
+  .tl b{display:block;font-size:16px;margin-bottom:6px}
+  .tl span{font-size:14px;color:var(--nhat)}
+  .tl em{display:block;font-style:normal;font-size:13px;color:var(--xanh);
+    margin-top:12px;font-weight:600}
+
+  /* ── Chân ─────────────────────────────────────────────────── */
+  footer{border-top:1px solid var(--vien);padding:44px 0 56px;color:var(--nhat);font-size:14px}
+  .ft{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+  footer a{color:var(--nhat)}
+  footer a:hover{color:var(--xanh)}
+  .ft-lk{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+
+  @media (max-width:640px){
+    .hero-in{padding:64px 24px 56px}
+    section{padding:56px 0}
+    .luu{flex-direction:column;gap:12px}
+    .ft-lk{margin-left:0}
+  }
+</style>
 </head>
 <body>
-<div class="bao">
 
-<header>
-  <a class="ten" href="./">OPENTENKI</a>
-  <h1>Ứng dụng thời tiết cho Việt Nam</h1>
-  <p class="ngay">Dự báo theo phường xã · Radar mưa · Theo dõi bão · Cộng đồng theo tỉnh</p>
-  <p class="en">A free weather app for Vietnam — ward-level forecasts, rain radar, typhoon tracking, and province-based community rooms.</p>
-</header>
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="./"><span class="logo-o"></span>OpenTenki</a>
+    <div class="nav-lk">
+      <a href="#tinh-nang">Tính năng</a>
+      <a href="#nguon">Nguồn dữ liệu</a>
+      <a href="#tai-lieu">Tài liệu</a>
+      <a href="mailto:vietphongdangjp@gmail.com">Liên hệ</a>
+    </div>
+  </div>
+</nav>
 
-<h2>OpenTenki làm gì</h2>
-<ul>
-  <li><strong>Dự báo chi tiết tới cấp phường xã</strong> — 3.321 đơn vị trên toàn bộ 34 tỉnh thành.</li>
-  <li><strong>Bản đồ radar mưa</strong> — ảnh quan trắc vệ tinh từ JAXA, cập nhật 30 phút một lần.</li>
-  <li><strong>Theo dõi bão</strong> — đường đi và dự báo từ JMA (Cơ quan Khí tượng Nhật Bản, RSMC Tokyo).</li>
-  <li><strong>Phòng trò chuyện theo tỉnh</strong> — người cùng địa phương chia sẻ tình hình thời tiết thực tế.</li>
-  <li><strong>Khảo sát cảm giác thời tiết</strong> — bản đồ cảm nhận thật của người dùng theo từng giờ.</li>
-  <li><strong>Camera trực tiếp</strong> — dẫn tới các trang camera công khai của từng khu vực.</li>
-  <li><strong>Báo ngập từ cộng đồng</strong> — tin ngập lụt công khai, có người kiểm duyệt trước khi hiển thị.</li>
-</ul>
+<div class="hero">
+  <div class="troi" aria-hidden="true"></div>
+  <div class="hero-in">
+    <span class="nhan"><span class="cham"></span>Miễn phí · Không quảng cáo</span>
+    <h1>Thời tiết Việt Nam, <span class="grad">chi tiết tới từng phường xã</span></h1>
+    <p class="phu">Dự báo cho cả 3.321 phường xã trên 34 tỉnh thành. Radar mưa từ vệ tinh, đường đi của bão, và cộng đồng người cùng tỉnh chia sẻ tình hình thực tế ngoài trời.</p>
+    <p class="phu-en">A free weather app for Vietnam — ward-level forecasts across all 34 provinces, satellite rain radar, typhoon tracking, and province-based community rooms.</p>
 
-<div class="hop">
-  <p><strong>Lưu ý quan trọng.</strong> OpenTenki <strong>không phải</strong> cơ quan khí tượng chính thức. Cảnh báo thiên tai chính thức tại Việt Nam do <strong>Trung tâm Dự báo Khí tượng Thủy văn Quốc gia (NCHMF)</strong> ban hành. Thông tin trong ứng dụng mang tính tham khảo.</p>
-  <p class="en"><strong>Important.</strong> OpenTenki is not an official meteorological authority. Official disaster warnings in Vietnam are issued by NCHMF. Information in this app is for reference only.</p>
+    <div class="so">
+      <div class="so-o"><div class="so-n">34</div><div class="so-t">tỉnh thành</div></div>
+      <div class="so-o"><div class="so-n">3.321</div><div class="so-t">phường xã</div></div>
+      <div class="so-o"><div class="so-n">30 phút</div><div class="so-t">nhịp radar</div></div>
+      <div class="so-o"><div class="so-n">0 ₫</div><div class="so-t">trọn tính năng</div></div>
+    </div>
+  </div>
 </div>
 
-<h2>Tài liệu</h2>
-<ul>
-  <li><a href="./privacy.html">Chính sách quyền riêng tư</a> — Privacy Policy</li>
-  <li><a href="./terms.html">Điều khoản dịch vụ</a> — Terms of Service</li>
-  <li><a href="./xoa-du-lieu.html">Hướng dẫn xoá dữ liệu</a> — Data Deletion Instructions</li>
-</ul>
+<section id="tinh-nang">
+  <div class="bao">
+    <p class="tieu">Tính năng</p>
+    <h2>Đủ chi tiết để quyết định có mang áo mưa không</h2>
+    <p class="dan">Phần lớn ứng dụng thời tiết dừng ở cấp thành phố. OpenTenki đi xuống tới đơn vị hành chính nhỏ nhất — vì mưa ở Hoàn Kiếm không có nghĩa là mưa ở Hà Đông.</p>
 
-<h2>Liên hệ</h2>
-<p>Email: <a href="mailto:vietphongdangjp@gmail.com">vietphongdangjp@gmail.com</a></p>
+    <div class="luoi">
+      <div class="the">
+        <div class="bt">🌤️</div>
+        <h3>Dự báo theo phường xã</h3>
+        <p>Nhiệt độ, lượng mưa, gió, độ ẩm và chỉ số UV theo từng giờ, cho đúng nơi bạn đang đứng chứ không phải trung tâm tỉnh.</p>
+      </div>
+      <div class="the">
+        <div class="bt">🛰️</div>
+        <h3>Radar mưa vệ tinh</h3>
+        <p>Ảnh quan trắc thật từ JAXA, cập nhật 30 phút một lần, kèm dự báo nowcast để biết mưa còn bao xa.</p>
+      </div>
+      <div class="the">
+        <div class="bt">🌀</div>
+        <h3>Theo dõi bão</h3>
+        <p>Đường đi đã qua và dự báo từ JMA — cơ quan khí tượng chính thức của khu vực Tây Bắc Thái Bình Dương, phân hạng theo thang bão Việt Nam.</p>
+      </div>
+      <div class="the">
+        <div class="bt">💬</div>
+        <h3>Phòng trò chuyện theo tỉnh</h3>
+        <p>34 phòng, mỗi tỉnh một phòng. Người tại chỗ nói tình hình thật — thứ không mô hình nào thay được.</p>
+      </div>
+      <div class="the">
+        <div class="bt">🌡️</div>
+        <h3>Bản đồ cảm giác thật</h3>
+        <p>Mỗi giờ một lượt: bạn thấy dễ chịu hay khó chịu, trời thế nào. Gộp lại thành bản đồ cảm nhận của cả nước.</p>
+      </div>
+      <div class="the">
+        <div class="bt">📹</div>
+        <h3>Camera trực tiếp</h3>
+        <p>Dẫn tới các trang camera công khai theo khu vực. Muốn biết trời thế nào thì nhìn, khỏi đoán.</p>
+      </div>
+      <div class="the">
+        <div class="bt">🌊</div>
+        <h3>Báo ngập từ cộng đồng</h3>
+        <p>Tin ngập lụt công khai, có người kiểm duyệt thủ công trước khi hiển thị, luôn dẫn về bài gốc.</p>
+      </div>
+      <div class="the">
+        <div class="bt">🏅</div>
+        <h3>Thành tựu</h3>
+        <p>Mười ba cột mốc ghi nhận đóng góp của bạn. Không có bảng xếp hạng, không đua với ai.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<footer>© 2026 OpenTenki</footer>
+<section class="nguon" id="nguon">
+  <div class="bao">
+    <p class="tieu">Nguồn dữ liệu</p>
+    <h2>Số liệu đến từ đâu</h2>
+    <p class="dan">Chúng tôi không tự đo thời tiết. Mọi con số trong ứng dụng đều có nguồn, và nguồn ấy được ghi rõ ngay tại chỗ hiển thị.</p>
 
-</div>
+    <div class="ng-luoi">
+      <div class="ng"><b>Open-Meteo</b><span>Mô hình dự báo ECMWF</span></div>
+      <div class="ng"><b>JMA · RSMC Tokyo</b><span>Bản tin bão chính thức của khu vực</span></div>
+      <div class="ng"><b>JAXA · GSMaP</b><span>Quan trắc mưa từ vệ tinh</span></div>
+      <div class="ng"><b>Mapbox</b><span>Nền bản đồ và ranh giới hành chính</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="bao">
+    <div class="luu">
+      <div class="luu-bt" aria-hidden="true">⚠️</div>
+      <div>
+        <h3>OpenTenki không phải cơ quan khí tượng chính thức</h3>
+        <p>Cảnh báo thiên tai chính thức tại Việt Nam do <strong>Trung tâm Dự báo Khí tượng Thủy văn Quốc gia (NCHMF)</strong> ban hành. Thông tin trong ứng dụng mang tính tham khảo và không nên là căn cứ duy nhất cho các quyết định liên quan tới an toàn tính mạng, tài sản.</p>
+        <p class="en">OpenTenki is not an official meteorological authority. Official disaster warnings in Vietnam are issued by NCHMF. Information in this app is for reference only and should not be your sole basis for decisions affecting life or property.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tai-lieu">
+  <div class="bao">
+    <p class="tieu">Tài liệu</p>
+    <h2>Minh bạch về dữ liệu của bạn</h2>
+    <p class="dan">Chúng tôi không bán dữ liệu, không dùng cho quảng cáo, và không theo dõi bạn sang ứng dụng khác. Ba trang dưới đây nói rõ từng điều một, song ngữ Việt–Anh.</p>
+
+    <div class="tl">
+      <a href="./privacy.html">
+        <b>Chính sách quyền riêng tư</b>
+        <span>Thu thập gì, dùng làm gì, giữ bao lâu, và những gì chúng tôi tuyệt đối không làm.</span>
+        <em>Privacy Policy →</em>
+      </a>
+      <a href="./terms.html">
+        <b>Điều khoản dịch vụ</b>
+        <span>Quy tắc sử dụng, nội dung được phép đăng, và giới hạn trách nhiệm.</span>
+        <em>Terms of Service →</em>
+      </a>
+      <a href="./xoa-du-lieu.html">
+        <b>Hướng dẫn xoá dữ liệu</b>
+        <span>Cách xoá tài khoản và toàn bộ dữ liệu cá nhân, ngay trong ứng dụng hoặc qua email.</span>
+        <em>Data Deletion →</em>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="bao ft">
+    <div>© 2026 OpenTenki · <a href="mailto:vietphongdangjp@gmail.com">vietphongdangjp@gmail.com</a></div>
+    <div class="ft-lk">
+      <a href="./privacy.html">Quyền riêng tư</a>
+      <a href="./terms.html">Điều khoản</a>
+      <a href="./xoa-du-lieu.html">Xoá dữ liệu</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
