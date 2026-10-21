@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mã uỷ quyền — OpenTenki</title>
+<title>Mã uỷ quyền · Authorization code — OpenTenki</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +16,9 @@
     border-radius:12px;padding:16px 18px;margin:14px 0;line-height:1.55;
     user-select:all;-webkit-user-select:all}
   .trong{color:var(--nhat)}
+  .chep{font:inherit;font-weight:600;font-size:14px;cursor:pointer;border:0;border-radius:10px;
+    padding:10px 18px;background:var(--xanh,#1d4ed8);color:#fff}
+  .chep:focus-visible{outline:2px solid #93c5fd;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -28,34 +31,37 @@
 
 <div class="dau">
   <div class="dau-in">
-  <h1>Mã uỷ quyền</h1>
-  <p class="ngay">Trang kỹ thuật — chỉ dùng khi lấy quyền truy cập Threads API</p>
+  <h1>Mã uỷ quyền · Authorization code</h1>
+  <p class="ngay">Trang kỹ thuật — chỉ người vận hành OpenTenki dùng khi kết nối tài khoản Threads</p>
+  <p class="en">Technical page — used only by the OpenTenki operator when connecting our Threads account.</p>
   </div>
 </div>
 
 <div class="bao">
 
 <div id="co" hidden>
-  <h2>Mã của bạn</h2>
-  <p>Bấm vào khối dưới để chọn hết, rồi sao chép:</p>
+  <h2>Mã của bạn · Your code</h2>
   <div class="ma" id="ma"></div>
+  <p><button type="button" class="chep" id="chep">Sao chép mã · Copy code</button></p>
   <div class="hop">
-    <p><strong>Dán vào <code>.env</code>:</strong></p>
-    <div class="ma">THREADS_OAUTH_CODE=<span id="ma2"></span></div>
-    <p>Rồi chạy: <code>npm run thu-threads -- --doi-ma</code></p>
-    <p><strong>Mã này hết hạn sau vài phút.</strong> Làm ngay, đừng để lát nữa.</p>
+    <p><strong>Dán mã này vào trang quản trị OpenTenki</strong>, ô "Mã uỷ quyền" trong khung Tài khoản Threads, rồi bấm Xác nhận.</p>
+    <p class="en"><strong>Paste this code into the OpenTenki admin panel</strong> ("Authorization code" in the Threads account box), then click Connect.</p>
+    <p><strong>Mã hết hạn sau vài phút và chỉ dùng được một lần.</strong></p>
+    <p class="en">The code expires in a few minutes and works only once.</p>
   </div>
 </div>
 
 <div id="khong">
-  <h2 class="trong">Chưa có mã</h2>
+  <h2 class="trong">Chưa có mã · No code yet</h2>
   <p class="trong">Trang này chỉ hiện nội dung khi Threads chuyển hướng về đây kèm tham số <code>code</code>. Mở thẳng thì không có gì để hiện.</p>
+  <p class="en">This page only shows something when Threads redirects here with a <code>code</code> parameter.</p>
 </div>
 
 <div id="loi" hidden>
-  <h2>Threads từ chối</h2>
+  <h2>Threads từ chối · Threads declined</h2>
   <div class="ma" id="loi-chu"></div>
   <p>Thường là do bạn bấm Huỷ, hoặc địa chỉ chuyển hướng chưa khớp cấu hình trong bảng điều khiển của Meta.</p>
+  <p class="en">Usually because access was cancelled, or the redirect address does not match the Meta app settings.</p>
 </div>
 
 <a class="quay" href="./">← Về trang chủ OpenTenki</a>
@@ -82,8 +88,21 @@
     // Threads gắn thêm "#_" vào cuối, cắt đi kẻo dán nhầm cả nó.
     ma = ma.replace(/#_$/, '');
     document.getElementById('ma').textContent = ma;
-    document.getElementById('ma2').textContent = ma;
     document.getElementById('co').hidden = false;
+    var nut = document.getElementById('chep');
+    nut.addEventListener('click', function () {
+      // Không có quyền ghi bộ nhớ tạm (trình duyệt cũ, trang không an toàn)
+      // thì chọn sẵn cả khối mã để người dùng tự bấm Cmd+C.
+      var chon = function () {
+        var r = document.createRange(); r.selectNodeContents(document.getElementById('ma'));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ma).then(function () {
+          nut.textContent = 'Đã sao chép · Copied';
+        }, chon);
+      } else { chon(); }
+    });
     document.getElementById('khong').hidden = true;
   } else if (loi) {
     document.getElementById('loi-chu').textContent = loi;
